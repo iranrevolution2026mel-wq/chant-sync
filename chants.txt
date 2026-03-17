@@ -7,9 +7,19 @@ startAt=2026-03-20T18:00:00+11:00
 # Format for each chant line:
 # MM:SS|Sentence
 
-00:00|First sentence starts now
-00:05|Second sentence starts now
-00:10|Third sentence starts now
-00:16|Fourth sentence starts now
-00:22|Fifth sentence starts now
-00:30|Repeat from the beginning if needed
+00:00|King Reza Pahlavi
+00:05|Reza Shah Rohat Shad
+00:10|In Akharin Nabarde Pahlavi Barmigarde
+00:16|Toop Tank Feshfeshe Akhond Bayad Gom Beshe
+00:22|Stop Killing in Iran
+00:27|Democracy for Iran Terrorist Out Of Iran
+00:34|Thank you Trump
+00:38|Thank you BB
+00:42|King Reza Pahlavi
+00:47|Reza Shah Rohat Shad
+00:52|In Akharin Nabarde Pahlavi Barmigarde
+00:58|Toop Tank Feshfeshe Akhond Bayad Gom Beshe
+01:04|Stop Killing in Iran
+01:09|Democracy for Iran Terrorist Out Of Iran
+01:16|Thank you Trump
+01:20|Thank you BB
