@@ -1,4 +1,3 @@
-const loadingPanelEl = document.getElementById("loadingPanel");
 const loadingStatusEl = document.getElementById("loadingStatus");
 
 const statusEl = document.getElementById("status");
@@ -30,74 +29,6 @@ function formatDuration(ms) {
   return `${pad(minutes)}:${pad(seconds)}`;
 }
 
-function parseTimeToSeconds(mmss) {
-  const parts = mmss.trim().split(":");
-  if (parts.length !== 2) {
-    throw new Error(`Invalid time format: ${mmss}`);
-  }
-
-  const minutes = Number(parts[0]);
-  const seconds = Number(parts[1]);
-
-  if (Number.isNaN(minutes) || Number.isNaN(seconds)) {
-    throw new Error(`Invalid time value: ${mmss}`);
-  }
-
-  return minutes * 60 + seconds;
-}
-
-function parseChantsFile(text) {
-  const lines = text
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith("#"));
-
-  let startAt = null;
-  const items = [];
-
-  for (const line of lines) {
-    if (line.startsWith("startAt=")) {
-      startAt = new Date(line.replace("startAt=", "").trim());
-      continue;
-    }
-
-    const parts = line.split("|");
-    if (parts.length < 2) continue;
-
-    const offsetStr = parts[0].trim();
-    const chantText = parts.slice(1).join("|").trim();
-
-    items.push({
-      offsetSeconds: parseTimeToSeconds(offsetStr),
-      text: chantText,
-    });
-  }
-
-  if (!startAt || Number.isNaN(startAt.getTime())) {
-    throw new Error(
-      "Missing or invalid startAt in chants.txt. Example: startAt=2026-03-20T18:00:00+11:00"
-    );
-  }
-
-  if (!items.length) {
-    throw new Error("chants.txt has no chant lines.");
-  }
-
-  items.sort((a, b) => a.offsetSeconds - b.offsetSeconds);
-
-  const totalLoopDurationMs = items[items.length - 1].offsetSeconds * 1000;
-
-  if (totalLoopDurationMs <= 0) {
-    throw new Error("Total loop duration is invalid.");
-  }
-
-  return {
-    startAtMs: startAt.getTime(),
-    items,
-    totalLoopDurationMs,
-  };
-}
-
 async function fetchTextWithServerTime(url) {
   const requestStart = Date.now();
   const response = await fetch(`${url}?v=${Date.now()}`, { cache: "no-store" });
@@ -112,7 +43,6 @@ async function fetchTextWithServerTime(url) {
   const dateHeader = response.headers.get("date");
   if (dateHeader) {
     const serverDateMs = new Date(dateHeader).getTime();
-
     if (!Number.isNaN(serverDateMs)) {
       const estimatedClientReceiveMs = (requestStart + requestEnd) / 2;
       serverTimeOffsetMs = serverDateMs - estimatedClientReceiveMs;
@@ -124,6 +54,69 @@ async function fetchTextWithServerTime(url) {
 
 function getSyncedNowMs() {
   return Date.now() + serverTimeOffsetMs;
+}
+
+function parseChantsFile(text) {
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"));
+
+  let startAt = null;
+  const rawItems = [];
+
+  for (const line of lines) {
+    if (line.startsWith("startAt=")) {
+      startAt = new Date(line.replace("startAt=", "").trim());
+      continue;
+    }
+
+    const parts = line.split("|");
+    if (parts.length < 2) continue;
+
+    const durationSeconds = Number(parts[0].trim());
+    const chantText = parts.slice(1).join("|").trim();
+
+    if (Number.isNaN(durationSeconds) || durationSeconds <= 0) {
+      throw new Error(`Invalid duration in line: ${line}`);
+    }
+
+    rawItems.push({
+      durationSeconds,
+      text: chantText,
+    });
+  }
+
+  if (!startAt || Number.isNaN(startAt.getTime())) {
+    throw new Error(
+      "Missing or invalid startAt. Example: startAt=2026-03-17T20:00:00+11:00"
+    );
+  }
+
+  if (!rawItems.length) {
+    throw new Error("chants.txt has no valid chant lines.");
+  }
+
+  let cumulativeMs = 0;
+  const items = rawItems.map((item) => {
+    const startMs = cumulativeMs;
+    const durationMs = item.durationSeconds * 1000;
+    const endMs = startMs + durationMs;
+    cumulativeMs = endMs;
+
+    return {
+      text: item.text,
+      durationMs,
+      startMs,
+      endMs,
+    };
+  });
+
+  return {
+    startAtMs: startAt.getTime(),
+    items,
+    totalLoopDurationMs: cumulativeMs,
+  };
 }
 
 async function loadChants() {
@@ -170,43 +163,28 @@ function updateView() {
   }
 
   const loopElapsedMs = elapsedMs % chantData.totalLoopDurationMs;
-  const loopElapsedSeconds = loopElapsedMs / 1000;
 
-  let currentIndex = -1;
-
-  for (let i = 0; i < chantData.items.length; i++) {
-    if (loopElapsedSeconds >= chantData.items[i].offsetSeconds) {
-      currentIndex = i;
-    } else {
-      break;
-    }
-  }
+  let currentIndex = chantData.items.findIndex(
+    (item) => loopElapsedMs >= item.startMs && loopElapsedMs < item.endMs
+  );
 
   if (currentIndex === -1) {
-    currentIndex = 0;
+    currentIndex = chantData.items.length - 1;
   }
 
   const currentItem = chantData.items[currentIndex];
-  const nextItem =
-    chantData.items[(currentIndex + 1) % chantData.items.length];
+  const nextItem = chantData.items[(currentIndex + 1) % chantData.items.length];
 
-  const currentStartMs = currentItem.offsetSeconds * 1000;
-  const nextStartMs =
-    currentIndex === chantData.items.length - 1
-      ? chantData.totalLoopDurationMs
-      : chantData.items[currentIndex + 1].offsetSeconds * 1000;
+  const passedInSegmentMs = loopElapsedMs - currentItem.startMs;
+  const remainingMs = currentItem.endMs - loopElapsedMs;
 
-  const segmentDurationMs = nextStartMs - currentStartMs;
-  const passedInSegmentMs = loopElapsedMs - currentStartMs;
-  const remainingMs = nextStartMs - loopElapsedMs;
-
-  const percent =
-    segmentDurationMs > 0
-      ? Math.max(0, Math.min(100, (passedInSegmentMs / segmentDurationMs) * 100))
-      : 100;
+  const percent = Math.max(
+    0,
+    Math.min(100, (passedInSegmentMs / currentItem.durationMs) * 100)
+  );
 
   currentChantEl.textContent = currentItem.text;
-  nextChantEl.textContent = nextItem ? nextItem.text : "—";
+  nextChantEl.textContent = nextItem.text;
   countdownEl.textContent = formatDuration(remainingMs);
   progressBarEl.style.width = `${percent}%`;
 
