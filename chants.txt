@@ -1,18 +1,18 @@
 # seconds|sentence
 
-10|King Reza Pahlavi
-10|Reza Shah Rohat Shad
-12|In Akharin Nabarde Pahlavi Barmigarde
-12|Toop Tank Feshfeshe Akhond Bayad Gom Beshe
-10|Stop Killing in Iran
-14|Democracy for Iran Terrorist Out Of Iran
-8|Thank you Trump
-8|Thank you BB
-10|King Reza Pahlavi
-10|Reza Shah Rohat Shad
-12|In Akharin Nabarde Pahlavi Barmigarde
-12|Toop Tank Feshfeshe Akhond Bayad Gom Beshe
-10|Stop Killing in Iran
-14|Democracy for Iran Terrorist Out Of Iran
-8|Thank you Trump
-8|Thank you BB
+20|King Reza Pahlavi
+20|Reza Shah Rohat Shad
+24|In Akharin Nabarde Pahlavi Barmigarde
+24|Toop Tank Feshfeshe Akhond Bayad Gom Beshe
+20|Stop Killing in Iran
+28|Democracy for Iran Terrorist Out Of Iran
+16|Thank you Trump
+16|Thank you BB
+20|King Reza Pahlavi
+20|Reza Shah Rohat Shad
+24|In Akharin Nabarde Pahlavi Barmigarde
+24|Toop Tank Feshfeshe Akhond Bayad Gom Beshe
+20|Stop Killing in Iran
+28|Democracy for Iran Terrorist Out Of Iran
+16|Thank you Trump
+16|Thank you BB
