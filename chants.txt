@@ -1,0 +1,15 @@
+# Put the real start date and time here
+# Format example:
+# startAt=2026-03-20T18:00:00+11:00
+
+startAt=2026-03-20T18:00:00+11:00
+
+# Format for each chant line:
+# MM:SS|Sentence
+
+00:00|First sentence starts now
+00:05|Second sentence starts now
+00:10|Third sentence starts now
+00:16|Fourth sentence starts now
+00:22|Fifth sentence starts now
+00:30|Repeat from the beginning if needed

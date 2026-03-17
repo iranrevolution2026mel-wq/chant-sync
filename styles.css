@@ -1,0 +1,131 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: #111;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.app {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.status-group,
+.current-section,
+.countdown-section,
+.next-section,
+.footer-section {
+  background: #1c1c1c;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.label {
+  font-size: 0.95rem;
+  color: #aaa;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.big-label {
+  font-size: 1rem;
+}
+
+.status {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.small-text {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.current-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 34vh;
+}
+
+.current-chant {
+  font-size: clamp(2rem, 6vw, 5rem);
+  font-weight: bold;
+  line-height: 1.2;
+  text-align: center;
+  word-break: break-word;
+}
+
+.countdown-section {
+  text-align: center;
+}
+
+.countdown {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: bold;
+  margin-bottom: 14px;
+}
+
+.progress-wrap {
+  width: 100%;
+  height: 16px;
+  border-radius: 999px;
+  background: #2b2b2b;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #f5f5f5;
+  transition: width 0.2s linear;
+}
+
+.next-chant {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  line-height: 1.4;
+  color: #ddd;
+}
+
+.instructions {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #ddd;
+}
+
+@media (max-width: 700px) {
+  .topbar {
+    grid-template-columns: 1fr;
+  }
+
+  .app {
+    padding: 14px;
+  }
+}
