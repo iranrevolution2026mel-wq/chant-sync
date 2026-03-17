@@ -1,59 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chant Sync</title>
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    #chant {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 4rem;
+      padding: 30px;
+      box-sizing: border-box;
+      direction: rtl;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #loadingText {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    #progressText {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    #statusBar {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      right: 15px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      opacity: 0.85;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
-  <main class="app">
-    <div class="topbar">
-      <div class="status-group">
-        <div class="label">Status</div>
-        <div id="status" class="status">Loading…</div>
-      </div>
+  <div id="overlay">
+    <div id="loadingText">Loading chants...</div>
+    <div id="progressText">Please wait</div>
+  </div>
 
-      <div class="status-group">
-        <div class="label">Start time</div>
-        <div id="startTimeText" class="small-text">—</div>
-      </div>
+  <div id="chant">Loading...</div>
 
-      <div class="status-group">
-        <div class="label">Now</div>
-        <div id="nowText" class="small-text">—</div>
-      </div>
-    </div>
+  <div id="statusBar">
+    <div id="currentIndex">Chant: -</div>
+    <div id="totalCount">Total: -</div>
+  </div>
 
-    <section class="current-section">
-      <div class="label big-label">Current chant</div>
-      <div id="currentChant" class="current-chant">Waiting…</div>
-    </section>
+  <script>
+    const chantElement = document.getElementById("chant");
+    const overlay = document.getElementById("overlay");
+    const loadingText = document.getElementById("loadingText");
+    const progressText = document.getElementById("progressText");
+    const currentIndex = document.getElementById("currentIndex");
+    const totalCount = document.getElementById("totalCount");
 
-    <section class="countdown-section">
-      <div class="label">Next change in</div>
-      <div id="countdown" class="countdown">—</div>
-      <div class="progress-wrap">
-        <div id="progressBar" class="progress-bar"></div>
-      </div>
-    </section>
+    const chantDuration = 3000; // 3 seconds per chant
+    let chants = [];
+    let index = 0;
 
-    <section class="next-section">
-      <div class="label">Next chant</div>
-      <div id="nextChant" class="next-chant">—</div>
-    </section>
+    async function loadChants() {
+      try {
+        const response = await fetch("chants.txt");
+        const text = await response.text();
 
-    <section class="footer-section">
-      <div class="label">Instructions</div>
-      <div class="instructions">
-        Open this page and keep it full screen. Everyone will follow the same timed sequence.
-      </div>
-    </section>
-  </main>
+        chants = text
+          .split("\n")
+          .map(line => line.trim())
+          .filter(line => line.length > 0);
 
-  <script src="app.js"></script>
+        if (chants.length === 0) {
+          loadingText.textContent = "No chants found";
+          progressText.textContent = "Your chants.txt file is empty";
+          chantElement.textContent = "No chants found";
+          return;
+        }
+
+        totalCount.textContent = `Total: ${chants.length}`;
+        loadingText.textContent = "Chants loaded";
+        progressText.textContent = `Found ${chants.length} chants`;
+
+        startLoop();
+
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 1200);
+
+      } catch (error) {
+        loadingText.textContent = "Error loading chants";
+        progressText.textContent = "Make sure chants.txt is in the same folder";
+        chantElement.textContent = "Could not load chants.txt";
+        console.error(error);
+      }
+    }
+
+    function showChant() {
+      chantElement.textContent = chants[index];
+      currentIndex.textContent = `Chant: ${index + 1} / ${chants.length}`;
+      progressText.textContent = `Now showing chant ${index + 1} of ${chants.length}`;
+    }
+
+    function startLoop() {
+      showChant(); // starts immediately
+
+      setInterval(() => {
+        index = (index + 1) % chants.length; // loop forever
+        showChant();
+      }, chantDuration);
+    }
+
+    loadChants();
+  </script>
 </body>
 </html>
