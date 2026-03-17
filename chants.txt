@@ -1,18 +1,23 @@
-# seconds|sentence
+# Global start time in Melbourne time (+11:00 shown here as example)
+# Everyone syncs to this same time
+startAt=2026-03-20T18:00:00+11:00
 
-20|King Reza Pahlavi
-20|Reza Shah Rohat Shad
-24|In Akharin Nabarde Pahlavi Barmigarde
-24|Toop Tank Feshfeshe Akhond Bayad Gom Beshe
-20|Stop Killing in Iran
-28|Democracy for Iran Terrorist Out Of Iran
-16|Thank you Trump
-16|Thank you BB
-20|King Reza Pahlavi
-20|Reza Shah Rohat Shad
-24|In Akharin Nabarde Pahlavi Barmigarde
-24|Toop Tank Feshfeshe Akhond Bayad Gom Beshe
-20|Stop Killing in Iran
-28|Democracy for Iran Terrorist Out Of Iran
-16|Thank you Trump
-16|Thank you BB
+# Format:
+# MM:SS|Sentence
+
+00:00|King Reza Pahlavi
+00:20|Reza Shah Rohat Shad
+00:40|In Akharin Nabarde Pahlavi Barmigarde
+01:00|Toop Tank Feshfeshe Akhond Bayad Gom Beshe
+01:20|Stop Killing in Iran
+01:40|Democracy for Iran Terrorist Out Of Iran
+02:00|Thank you Trump
+02:20|Thank you BB
+02:40|King Reza Pahlavi
+03:00|Reza Shah Rohat Shad
+03:20|In Akharin Nabarde Pahlavi Barmigarde
+03:40|Toop Tank Feshfeshe Akhond Bayad Gom Beshe
+04:00|Stop Killing in Iran
+04:20|Democracy for Iran Terrorist Out Of Iran
+04:40|Thank you Trump
+05:00|Thank you BB
