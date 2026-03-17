@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Chant Sync</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <div class="topbar">
+      <div class="status-group">
+        <div class="label">Status</div>
+        <div id="status" class="status">Loading…</div>
+      </div>
+
+      <div class="status-group">
+        <div class="label">Start time</div>
+        <div id="startTimeText" class="small-text">—</div>
+      </div>
+
+      <div class="status-group">
+        <div class="label">Now</div>
+        <div id="nowText" class="small-text">—</div>
+      </div>
+    </div>
+
+    <section class="current-section">
+      <div class="label big-label">Current chant</div>
+      <div id="currentChant" class="current-chant">Waiting…</div>
+    </section>
+
+    <section class="countdown-section">
+      <div class="label">Next change in</div>
+      <div id="countdown" class="countdown">—</div>
+      <div class="progress-wrap">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+    </section>
+
+    <section class="next-section">
+      <div class="label">Next chant</div>
+      <div id="nextChant" class="next-chant">—</div>
+    </section>
+
+    <section class="footer-section">
+      <div class="label">Instructions</div>
+      <div class="instructions">
+        Open this page and keep it full screen. Everyone will follow the same timed sequence.
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
